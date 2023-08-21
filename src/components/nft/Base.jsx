@@ -1,13 +1,16 @@
 import expressions from "./Expressions";
+import antennae from "./Antennae";
 
 export default function Base({ dna }) {
   const expression = expressions(dna);
+  const antenna = antennae(dna);
+
   return (
     <>
       <svg
         width="300.5px"
-        height="513.236459px"
-        viewBox="0 0 300.5 513.236459"
+        height="557.236459px"
+        viewBox={`0 0 ${300 + (dna.size * 10)} 550`}
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -15,9 +18,9 @@ export default function Base({ dna }) {
         <defs>
           <filter
             x="-2.4%"
-            y="-1.1%"
-            width="104.1%"
-            height="114.1%"
+            y="-1.0%"
+            width="106.8%"
+            height="112.9%"
             filterUnits="objectBoundingBox"
             id="filter-1"
           >
@@ -33,7 +36,7 @@ export default function Base({ dna }) {
               result="shadowBlurOuter1"
             ></feGaussianBlur>
             <feColorMatrix
-              values="0 0 0 0 0.476917212   0 0 0 0 0.476917212   0 0 0 0 0.476917212  0 0 0 0.2 0"
+              values="0 0 0 0 0.476917212   0 0 0 0 0.476917212   0 0 0 0 0.476917212  0 0 0 0.510287198 0"
               type="matrix"
               in="shadowBlurOuter1"
               result="shadowMatrixOuter1"
@@ -43,8 +46,42 @@ export default function Base({ dna }) {
               <feMergeNode in="SourceGraphic"></feMergeNode>
             </feMerge>
           </filter>
+          <rect id="path-2" x="249" y="0" width="13" height="167" rx="6"></rect>
+          <filter
+            x="-34.6%"
+            y="-2.7%"
+            width="169.2%"
+            height="105.4%"
+            filterUnits="objectBoundingBox"
+            id="filter-3"
+          >
+            <feGaussianBlur
+              stdDeviation="1.5"
+              in="SourceAlpha"
+              result="shadowBlurInner1"
+            ></feGaussianBlur>
+            <feOffset
+              dx="6"
+              dy="1"
+              in="shadowBlurInner1"
+              result="shadowOffsetInner1"
+            ></feOffset>
+            <feComposite
+              in="shadowOffsetInner1"
+              in2="SourceAlpha"
+              operator="arithmetic"
+              k2="-1"
+              k3="1"
+              result="shadowInnerInner1"
+            ></feComposite>
+            <feColorMatrix
+              values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"
+              type="matrix"
+              in="shadowInnerInner1"
+            ></feColorMatrix>
+          </filter>
           <rect
-            id="path-2"
+            id="path-4"
             x="8"
             y="10"
             width="211"
@@ -57,7 +94,7 @@ export default function Base({ dna }) {
             width="101.9%"
             height="103.1%"
             filterUnits="objectBoundingBox"
-            id="filter-3"
+            id="filter-5"
           >
             <feGaussianBlur
               stdDeviation="1.5"
@@ -79,14 +116,14 @@ export default function Base({ dna }) {
               result="shadowInnerInner1"
             ></feComposite>
             <feColorMatrix
-              values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.2 0"
+              values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"
               type="matrix"
               in="shadowInnerInner1"
             ></feColorMatrix>
           </filter>
           <path
-            d="M144.970173,179.567871 C178.779674,179.567871 182.620818,225.380594 182.620818,281.893452 C182.620818,286.225531 182.598246,290.494734 182.541335,294.685243 L225,294.68415 C259.241654,294.68415 287,322.442496 287,356.68415 L287,454.567871 L9,454.567871 L9,356.68415 C9,322.442496 36.7583455,294.68415 71,294.68415 L113.38781,294.685243 C113.396991,290.494734 113.41021,286.225531 113.41021,281.893452 C113.41021,225.380594 111.160671,179.567871 144.970173,179.567871 Z M250.5,340.067871 C252.065816,362.429502 252.848724,381.596169 252.848724,397.567871 C252.848724,413.539573 252.065816,432.70624 250.5,455.067871 M57.5,384.204235 L57.5,452.931507 M113.5,240.207871 L114,303.567871 M182.5,278.217871 L182.5,302.917871"
-            id="path-4"
+            d="M144.970173,223.567871 C178.779674,223.567871 182.620818,269.380594 182.620818,325.893452 C182.620818,330.225531 182.598246,334.494734 182.541335,338.685243 L225,338.68415 C259.241654,338.68415 287,366.442496 287,400.68415 L287,498.567871 L9,498.567871 L9,400.68415 C9,366.442496 36.7583455,338.68415 71,338.68415 L113.38781,338.685243 C113.396991,334.494734 113.41021,330.225531 113.41021,325.893452 C113.41021,269.380594 111.160671,223.567871 144.970173,223.567871 Z M250.5,384.067871 C252.065816,406.429502 252.848724,425.596169 252.848724,441.567871 C252.848724,457.539573 252.065816,476.70624 250.5,499.067871 M57.5,428.204235 L57.5,496.931507 M113.5,284.207871 L114,347.567871 M182.5,322.217871 L182.5,346.917871"
+            id="path-6"
           ></path>
           <filter
             x="-3.1%"
@@ -94,7 +131,7 @@ export default function Base({ dna }) {
             width="106.1%"
             height="121.7%"
             filterUnits="objectBoundingBox"
-            id="filter-5"
+            id="filter-7"
           >
             <feMorphology
               radius="1.5"
@@ -120,7 +157,7 @@ export default function Base({ dna }) {
               result="shadowBlurOuter1"
             ></feComposite>
             <feColorMatrix
-              values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.2 0"
+              values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"
               type="matrix"
               in="shadowBlurOuter1"
             ></feColorMatrix>
@@ -131,7 +168,7 @@ export default function Base({ dna }) {
             width="107.9%"
             height="123.5%"
             filterUnits="objectBoundingBox"
-            id="filter-6"
+            id="filter-8"
           >
             <feMorphology
               radius="6"
@@ -159,7 +196,7 @@ export default function Base({ dna }) {
               result="shadowInnerInner1"
             ></feComposite>
             <feColorMatrix
-              values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.2 0"
+              values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.300400527 0"
               type="matrix"
               in="shadowInnerInner1"
               result="shadowMatrixInner1"
@@ -190,7 +227,7 @@ export default function Base({ dna }) {
               result="shadowInnerInner2"
             ></feComposite>
             <feColorMatrix
-              values="0 0 0 0 0.373734184   0 0 0 0 0.373734184   0 0 0 0 0.373734184  0 0 0 0.2 0"
+              values="0 0 0 0 0.373734184   0 0 0 0 0.373734184   0 0 0 0 0.373734184  0 0 0 0.5 0"
               type="matrix"
               in="shadowInnerInner2"
               result="shadowMatrixInner2"
@@ -202,7 +239,7 @@ export default function Base({ dna }) {
           </filter>
           <path
             d="M109,258.567871 C169.199038,258.567871 192.039185,187.828862 192.039185,100.567871 C192.039185,13.3068806 169.199038,0 109,0 C48.8009623,0 0,13.3068806 0,100.567871 C0,187.828862 48.8009623,258.567871 109,258.567871 Z"
-            id="path-7"
+            id="path-9"
           ></path>
           <filter
             x="-5.5%"
@@ -210,7 +247,7 @@ export default function Base({ dna }) {
             width="110.9%"
             height="108.1%"
             filterUnits="objectBoundingBox"
-            id="filter-8"
+            id="filter-10"
           >
             <feGaussianBlur
               stdDeviation="1.5"
@@ -232,7 +269,7 @@ export default function Base({ dna }) {
               result="shadowInnerInner1"
             ></feComposite>
             <feColorMatrix
-              values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.2 0"
+              values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.5 0"
               type="matrix"
               in="shadowInnerInner1"
               result="shadowMatrixInner1"
@@ -257,7 +294,7 @@ export default function Base({ dna }) {
               result="shadowInnerInner2"
             ></feComposite>
             <feColorMatrix
-              values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.2 0"
+              values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"
               type="matrix"
               in="shadowInnerInner2"
               result="shadowMatrixInner2"
@@ -267,28 +304,101 @@ export default function Base({ dna }) {
               <feMergeNode in="shadowMatrixInner2"></feMergeNode>
             </feMerge>
           </filter>
+          <path
+            d="M97.3786878,231 C151.159452,231 171.564439,167.80301 171.564439,89.8455718 C171.564439,11.8881337 151.159452,0 97.3786878,0 C43.5979236,0 0,11.8881337 0,89.8455718 C0,167.80301 43.5979236,231 97.3786878,231 Z"
+            id="path-11"
+          ></path>
+          <filter
+            x="-5.8%"
+            y="-4.3%"
+            width="111.7%"
+            height="108.7%"
+            filterUnits="objectBoundingBox"
+            id="filter-12"
+          >
+            <feMorphology
+              radius="2"
+              operator="dilate"
+              in="SourceAlpha"
+              result="shadowSpreadInner1"
+            ></feMorphology>
+            <feOffset
+              dx="22"
+              dy="1"
+              in="shadowSpreadInner1"
+              result="shadowOffsetInner1"
+            ></feOffset>
+            <feComposite
+              in="shadowOffsetInner1"
+              in2="SourceAlpha"
+              operator="arithmetic"
+              k2="-1"
+              k3="1"
+              result="shadowInnerInner1"
+            ></feComposite>
+            <feColorMatrix
+              values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.196659542 0"
+              type="matrix"
+              in="shadowInnerInner1"
+            ></feColorMatrix>
+          </filter>
+          <rect id="path-13" x="70" y="0" width="13" height="167" rx="6"></rect>
+          <filter
+            x="-34.6%"
+            y="-2.7%"
+            width="169.2%"
+            height="105.4%"
+            filterUnits="objectBoundingBox"
+            id="filter-14"
+          >
+            <feGaussianBlur
+              stdDeviation="1.5"
+              in="SourceAlpha"
+              result="shadowBlurInner1"
+            ></feGaussianBlur>
+            <feOffset
+              dx="6"
+              dy="1"
+              in="shadowBlurInner1"
+              result="shadowOffsetInner1"
+            ></feOffset>
+            <feComposite
+              in="shadowOffsetInner1"
+              in2="SourceAlpha"
+              operator="arithmetic"
+              k2="-1"
+              k3="1"
+              result="shadowInnerInner1"
+            ></feComposite>
+            <feColorMatrix
+              values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0"
+              type="matrix"
+              in="shadowInnerInner1"
+            ></feColorMatrix>
+          </filter>
         </defs>
         <g
-          id="base-droid"
+          id="Page-1"
           stroke="none"
           strokeWidth="1"
           fill="none"
           fillRule="evenodd"
         >
           <g id="droid" filter="url(#filter-1)" transform="translate(4, 2)">
-            <g id="battery" transform="translate(0, 276.5679)">
-              <g id="battey-component-1">
+            {antenna?.right}
+            <g id="battery" transform="translate(0, 320.5679)">
+              <g id="Rectangle">
                 <use
                   fillOpacity="0.506427045"
-                  fill={`#${dna.skinColor}`}
+                  fill={`#${dna.batteryColor}`}
                   fillRule="evenodd"
-                  xlinkHref="#path-2"
+                  xlinkHref="#path-4"
                 ></use>
                 <use
                   fill="black"
                   fillOpacity="1"
-                  filter="url(#filter-3)"
-                  xlinkHref="#path-2"
+                  filter="url(#filter-5)"
+                  xlinkHref="#path-4"
                 ></use>
                 <rect
                   stroke="#979797"
@@ -302,11 +412,11 @@ export default function Base({ dna }) {
                 ></rect>
               </g>
               <rect
-                id="battery-component-2"
+                id="Rectangle-Copy-2"
                 stroke="#000000"
                 strokeWidth="3"
                 fillOpacity="0.506427045"
-                fill={`#${dna.skinColor}`}
+                fill="#D8D8D8"
                 x="1.5"
                 y="1.5"
                 width="216"
@@ -318,34 +428,34 @@ export default function Base({ dna }) {
               <use
                 fill="black"
                 fillOpacity="1"
-                filter="url(#filter-5)"
-                xlinkHref="#path-4"
+                filter="url(#filter-7)"
+                xlinkHref="#path-6"
               ></use>
               <use
                 fill={`#${dna.skinColor}`}
                 fillRule="evenodd"
-                xlinkHref="#path-4"
+                xlinkHref="#path-6"
               ></use>
               <use
                 fill="black"
                 fillOpacity="1"
-                filter="url(#filter-6)"
-                xlinkHref="#path-4"
+                filter="url(#filter-8)"
+                xlinkHref="#path-6"
               ></use>
-              <use stroke="#000000" strokeWidth="3" xlinkHref="#path-4"></use>
+              <use stroke="#000000" strokeWidth="3" xlinkHref="#path-6"></use>
             </g>
-            <g id="head" transform="translate(70, 0)">
+            <g id="head" transform="translate(70, 44)">
               <g id="headShape">
                 <use
                   fill={`#${dna.skinColor}`}
                   fillRule="evenodd"
-                  xlinkHref="#path-7"
+                  xlinkHref="#path-9"
                 ></use>
                 <use
                   fill="black"
                   fillOpacity="1"
-                  filter="url(#filter-8)"
-                  xlinkHref="#path-7"
+                  filter="url(#filter-10)"
+                  xlinkHref="#path-9"
                 ></use>
                 <path
                   stroke="#000000"
@@ -355,30 +465,43 @@ export default function Base({ dna }) {
                 ></path>
               </g>
               <g id="face" transform="translate(20.2627, 8)">
-                <path
-                  d="M97.3786878,1.5 C124.828506,1.5 143.525277,4.47716844 155.022874,18.4017858 C165.609354,31.2229584 170.064439,53.1451537 170.064439,89.8455718 C170.064439,131.138719 164.341893,168.277513 150.855764,193.937789 C144.861941,205.342333 137.335099,214.463689 128.067494,220.612972 C119.402723,226.362261 109.219739,229.5 97.3786878,229.5 C70.9423006,229.5 47.0623414,213.890936 29.7562505,188.805043 C12.2845597,163.479106 1.5,128.486719 1.5,89.8455718 C1.5,55.6435558 9.93224906,34.304652 24.1070433,21.2264054 C41.7246644,4.97166554 68.04868,1.5 97.3786878,1.5 Z"
-                  id="face-screen"
-                  stroke={`#${dna.highlightColor}`}
-                  strokeWidth="3"
-                  fill="#000000"
-                ></path>
+                <g id="faceSCreen">
+                  <use
+                    fill="#000000"
+                    fillRule="evenodd"
+                    xlinkHref="#path-11"
+                  ></use>
+                  <use
+                    fill="black"
+                    fillOpacity="1"
+                    filter="url(#filter-12)"
+                    xlinkHref="#path-11"
+                  ></use>
+                  <path
+                    stroke={`#${dna.highlightColor}`}
+                    strokeWidth="3"
+                    d="M97.3786878,1.5 C124.828506,1.5 143.525277,4.47716844 155.022874,18.4017858 C165.609354,31.2229584 170.064439,53.1451537 170.064439,89.8455718 C170.064439,131.138719 164.341893,168.277513 150.855764,193.937789 C144.861941,205.342333 137.335099,214.463689 128.067494,220.612972 C119.402723,226.362261 109.219739,229.5 97.3786878,229.5 C70.9423006,229.5 47.0623414,213.890936 29.7562505,188.805043 C12.2845597,163.479106 1.5,128.486719 1.5,89.8455718 C1.5,55.6435558 9.93224906,34.304652 24.1070433,21.2264054 C41.7246644,4.97166554 68.04868,1.5 97.3786878,1.5 Z"
+                    strokeLinejoin="square"
+                  ></path>
+                </g>
                 {expression}
               </g>
             </g>
-            <g id="chestPlate" transform="translate(102, 313.1838)">
+            <g id="chestPlate" transform="translate(102, 357.1838)">
               <path
                 d="M109,27.3840441 C116.731986,27.3840441 123.731986,30.5180509 128.79899,35.5850543 C133.865993,40.6520577 137,47.6520577 137,55.3840441 L137,87.3840441 C137,100.638878 131.627417,112.638878 122.941125,121.32517 C114.254834,130.011461 102.254834,135.384044 89,135.384044 L29,135.384044 C21.2680135,135.384044 14.2680135,132.250037 9.20101013,127.183034 C4.13400675,122.116031 1,115.116031 1,107.384044 L1,55.3840441 C1,47.6520577 4.13400675,40.6520577 9.20101013,35.5850543 C14.2680135,30.5180509 21.2680135,27.3840441 29,27.3840441 Z"
-                id="plate"
+                id="Rectangle"
                 stroke={`#${dna.highlightColor}`}
                 strokeWidth="2"
                 fill={`#${dna.expressionColor}`}
               ></path>
               <path
                 d="M74.5,47.8840441 C76.0658162,60.7176759 76.8487244,71.7176759 76.8487244,80.8840441 C76.8487244,90.0504124 76.0658162,101.050412 74.5,113.884044"
-                id="chest-line"
-                fill="#000000"
+                id="line-copy"
+                fill={`#${dna.skinColor}`}
               ></path>
             </g>
+            {antenna?.left}
           </g>
         </g>
       </svg>
