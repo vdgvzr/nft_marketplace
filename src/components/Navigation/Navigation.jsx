@@ -1,23 +1,23 @@
-import { Button, Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { Container, Nav, NavDropdown, Navbar } from "react-bootstrap";
 import { PAGES } from "../../router";
 import { Link } from "react-router-dom";
-import "./Navigation.scss";
 import { useMetaMask } from "../../hooks/useMetamask";
 import { formatAddress } from "../../utils";
+import Btn from "../Button/Button";
 
 export default function Navigation() {
   const { hasProvider, wallet, connectMetaMask, isConnecting } = useMetaMask();
 
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary">
+      <Navbar expand="lg" className="">
         <Container fluid>
           <Link className="navbar-brand" to="/">
             {import.meta.env.VITE_SITE_NAME}
           </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
+            <Nav className="ms-auto">
               {PAGES.map((page, index) => {
                 return (
                   <Link className="nav-link" key={index} to={page.url}>
@@ -25,7 +25,7 @@ export default function Navigation() {
                   </Link>
                 );
               })}
-              {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">
                   Another action
@@ -37,26 +37,27 @@ export default function Navigation() {
                 <NavDropdown.Item href="#action/3.4">
                   Separated link
                 </NavDropdown.Item>
-              </NavDropdown> */}
+              </NavDropdown>
               {!hasProvider && (
-                <a href="https://metamask.io" target="_blank" rel="noreferrer">
-                  Install MetaMask
-                </a>
+                <Btn
+                  buttonText="Install MetaMask"
+                  href="https://metamask.io"
+                  classes="ms-3"
+                />
               )}
               {window.ethereum?.isMetaMask && wallet.accounts.length < 1 && (
-                <Button disabled={isConnecting} onClick={connectMetaMask}>
-                  Connect MetaMask
-                </Button>
+                <Btn
+                  buttonText={!isConnecting ? `Connect Metamask` : "Connecting"}
+                  onClick={connectMetaMask}
+                  classes="ms-3"
+                />
               )}
               {hasProvider && wallet.accounts.length > 0 && (
-                <a
-                  className="text_link tooltip-bottom"
+                <Btn
+                  buttonText={formatAddress(wallet.accounts[0])}
                   href={`https://etherscan.io/address/${wallet}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {formatAddress(wallet.accounts[0])}
-                </a>
+                  classes="ms-3"
+                />
               )}
             </Nav>
           </Navbar.Collapse>
