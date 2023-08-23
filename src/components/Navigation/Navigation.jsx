@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useMetaMask } from "../../hooks/useMetamask";
 import { formatAddress } from "../../utils";
 import Btn from "../Button/Button";
+import NFT from "../NftComponent/NFT";
 
 export default function Navigation() {
   const { hasProvider, wallet, connectMetaMask, isConnecting } = useMetaMask();
@@ -13,6 +14,9 @@ export default function Navigation() {
       <Navbar expand="lg" className="">
         <Container fluid>
           <Link className="navbar-brand" to="/">
+            <span className="navbar-brand__logo me-3">
+              <NFT />
+            </span>
             {import.meta.env.VITE_SITE_NAME}
           </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

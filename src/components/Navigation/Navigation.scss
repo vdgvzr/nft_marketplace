@@ -2,4 +2,16 @@
 
 .navbar {
   --bs-navbar-padding-y: 1.5rem !important;
+
+  &-brand {
+    &__logo {
+      img {
+        background-color: color(gray, mist);
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+        padding: 3px;
+      }
+    }
+  }
 }
