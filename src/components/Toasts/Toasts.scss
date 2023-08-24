@@ -1,0 +1,26 @@
+// Toasts
+
+.toast-container {
+  z-index: 999;
+  position: absolute;
+  top: 108px;
+  right: 0;
+
+  .toast {
+    border: none;
+    border-radius: 3px;
+
+    &-header {
+      border-radius: 3px;
+      font-family: "Roboto";
+      min-height: 38px;
+      background-color: color(brand, main-red);
+      color: color(brand, eggshell);
+    }
+
+    &-header,
+    .btn-close {
+      --bs-btn-close-bg: url("src/assets/images/svg/close-button.svg");
+    }
+  }
+}

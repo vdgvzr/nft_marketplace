@@ -2,6 +2,7 @@ import { Container } from "react-bootstrap";
 import Navigation from "./components/Navigation/Navigation";
 import { MetaMaskContextProvider } from "./hooks/useMetamask";
 import { Outlet } from "react-router-dom";
+import Toasts from "./components/Toasts/Toasts";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <Navigation />
         </header>
         <main>
+          <Toasts />
           <Container>
             <Outlet />
           </Container>

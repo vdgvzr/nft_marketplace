@@ -18,10 +18,12 @@ export const MetaMaskContextProvider = ({ children }) => {
   const [hasProvider, setHasProvider] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [contract, setContract] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [toastMessages, setToastMessages] = useState([]);
   const [wallet, setWallet] = useState(disconnectedState);
 
-  const clearError = () => setErrorMessage("");
+  function clearToastMessage(id) {
+    setToastMessages(toastMessages.filter((message) => message.id !== id));
+  }
 
   const _loadWeb3 = useCallback(async () => {
     window.web3 = new Web3(window.ethereum);
@@ -114,10 +116,21 @@ export const MetaMaskContextProvider = ({ children }) => {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      clearError();
+      clearToastMessage();
       updateWallet(accounts);
+      setToastMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          type: "success",
+          message: `Connected ${accounts[0]}!`,
+        },
+      ]);
     } catch (err) {
-      setErrorMessage(err.message);
+      setToastMessages((prev) => [
+        ...prev,
+        { id: crypto.randomUUID(), type: "error", message: err.message },
+      ]);
     }
     setIsConnecting(false);
   };
@@ -127,12 +140,12 @@ export const MetaMaskContextProvider = ({ children }) => {
       value={{
         wallet,
         hasProvider,
-        error: !!errorMessage,
-        errorMessage,
+        error: !!toastMessages,
+        toastMessages,
         isConnecting,
         contract,
         connectMetaMask,
-        clearError,
+        clearToastMessage,
         loadWeb3,
       }}
     >

@@ -7,7 +7,6 @@
   position: relative;
   text-decoration: none;
   text-align: center;
-  transition: opacity 0.1s ease-out;
   z-index: 5;
   min-width: 240px;
   width: 100%;
@@ -68,10 +67,6 @@
       transition: transform 0.12s ease-out, background 0.12s ease-out,
         color 0.12s ease-out;
       transform: translate3d(0, 2px, 0);
-
-      .custom-btn-content-inner {
-        opacity: 0.1;
-      }
     }
 
     &:before {
@@ -137,9 +132,6 @@
           align-items: center;
           justify-content: center;
           color: rgba(255, 255, 255, 0.8);
-          opacity: 0;
-          transition: transform 0.185s ease-out 0.05s,
-            opacity 0.1125s ease-out 0.05s;
         }
       }
     }
