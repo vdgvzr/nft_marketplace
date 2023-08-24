@@ -7,6 +7,8 @@ import {
 } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { formatBalance } from "../utils/index";
+import NftContract from "/abis/NftContract.json";
+import Web3 from "web3";
 
 const disconnectedState = { accounts: [], balance: "", chainId: "" };
 
@@ -14,13 +16,32 @@ const MetaMaskContext = createContext({});
 
 export const MetaMaskContextProvider = ({ children }) => {
   const [hasProvider, setHasProvider] = useState(null);
-
   const [isConnecting, setIsConnecting] = useState(false);
-
+  const [contract, setContract] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [wallet, setWallet] = useState(disconnectedState);
+
   const clearError = () => setErrorMessage("");
 
-  const [wallet, setWallet] = useState(disconnectedState);
+  const _loadWeb3 = useCallback(async () => {
+    window.web3 = new Web3(window.ethereum);
+    // const accounts = await window.web3.eth.getAccounts();
+    const networkId = await window.web3.eth.net.getId();
+    const nftNetworkData = NftContract.networks[networkId];
+
+    if (nftNetworkData) {
+      const contract = new window.web3.eth.Contract(
+        NftContract.abi,
+        nftNetworkData.address
+      );
+
+      // Set global state vars
+      setContract(contract);
+    }
+  }, []);
+
+  const loadWeb3 = useCallback(() => _loadWeb3(), [_loadWeb3]);
+
   // useCallback ensures that you don't uselessly recreate the _updateWallet function on every render
   const _updateWallet = useCallback(async (providedAccounts) => {
     const accounts =
@@ -68,8 +89,11 @@ export const MetaMaskContextProvider = ({ children }) => {
 
       if (provider) {
         updateWalletAndAccounts();
+        loadWeb3();
         window.ethereum.on("accountsChanged", updateWallet);
+        window.ethereum.on("accountsChanged", loadWeb3);
         window.ethereum.on("chainChanged", updateWalletAndAccounts);
+        window.ethereum.on("chainChanged", loadWeb3);
       }
     };
 
@@ -77,9 +101,11 @@ export const MetaMaskContextProvider = ({ children }) => {
 
     return () => {
       window.ethereum?.removeListener("accountsChanged", updateWallet);
+      window.ethereum?.removeListener("accountsChanged", loadWeb3);
       window.ethereum?.removeListener("chainChanged", updateWalletAndAccounts);
+      window.ethereum?.removeListener("chainChanged", loadWeb3);
     };
-  }, [updateWallet, updateWalletAndAccounts]);
+  }, [updateWallet, updateWalletAndAccounts, loadWeb3]);
 
   const connectMetaMask = async () => {
     setIsConnecting(true);
@@ -104,8 +130,10 @@ export const MetaMaskContextProvider = ({ children }) => {
         error: !!errorMessage,
         errorMessage,
         isConnecting,
+        contract,
         connectMetaMask,
         clearError,
+        loadWeb3,
       }}
     >
       {children}
