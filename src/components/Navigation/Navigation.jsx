@@ -7,7 +7,14 @@ import Btn from "../Button/Button";
 import NFT from "../NftComponent/NFT";
 
 export default function Navigation() {
-  const { hasProvider, wallet, connectMetaMask, isConnecting } = useMetaMask();
+  const {
+    hasProvider,
+    wallet,
+    connectMetaMask,
+    isConnecting,
+    isOwner,
+    loading,
+  } = useMetaMask();
 
   return (
     <>
@@ -17,17 +24,19 @@ export default function Navigation() {
             <span className="navbar-brand__logo me-3">
               <NFT />
             </span>
-            {import.meta.env.VITE_SITE_NAME}
+            <span>{import.meta.env.VITE_SITE_NAME}</span>
           </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               {PAGES.map((page, index) => {
-                return (
-                  <Link className="nav-link" key={index} to={page.url}>
-                    {page.name}
-                  </Link>
-                );
+                if (page.name !== "Admin" || isOwner) {
+                  return (
+                    <Link className="nav-link" key={index} to={page.url}>
+                      {page.name}
+                    </Link>
+                  );
+                }
               })}
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -51,14 +60,22 @@ export default function Navigation() {
               )}
               {window.ethereum?.isMetaMask && wallet.accounts.length < 1 && (
                 <Btn
-                  buttonText={!isConnecting ? `Connect Metamask` : "Connecting"}
+                  buttonText={
+                    loading
+                      ? "Loading..."
+                      : !isConnecting
+                      ? `Connect Metamask`
+                      : "Connecting"
+                  }
                   onClick={connectMetaMask}
                   classes="ms-3"
                 />
               )}
               {hasProvider && wallet.accounts.length > 0 && (
                 <Btn
-                  buttonText={formatAddress(wallet.accounts[0])}
+                  buttonText={
+                    loading ? "loading..." : formatAddress(wallet.accounts[0])
+                  }
                   href={`https://etherscan.io/address/${wallet.accounts[0]}`}
                   classes="ms-3"
                 />

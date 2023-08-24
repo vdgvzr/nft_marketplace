@@ -15,9 +15,13 @@ const disconnectedState = { accounts: [], balance: "", chainId: "" };
 const MetaMaskContext = createContext({});
 
 export const MetaMaskContextProvider = ({ children }) => {
+  const [loading, setLoading] = useState(false);
   const [hasProvider, setHasProvider] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [contract, setContract] = useState(false);
+  const [owner, setOwner] = useState("0x0");
+  const [isOwner, setIsOwner] = useState(false);
+  const [gen0Limit, setGen0Limit] = useState(false);
   const [toastMessages, setToastMessages] = useState([]);
   const [wallet, setWallet] = useState(disconnectedState);
 
@@ -26,8 +30,9 @@ export const MetaMaskContextProvider = ({ children }) => {
   }
 
   const _loadWeb3 = useCallback(async () => {
+    setLoading(true);
     window.web3 = new Web3(window.ethereum);
-    // const accounts = await window.web3.eth.getAccounts();
+    const accounts = await window.web3.eth.getAccounts();
     const networkId = await window.web3.eth.net.getId();
     const nftNetworkData = NftContract.networks[networkId];
 
@@ -39,7 +44,11 @@ export const MetaMaskContextProvider = ({ children }) => {
 
       // Set global state vars
       setContract(contract);
+      setOwner(await contract.methods.owner().call());
+      setIsOwner(accounts[0] === (await contract.methods.owner().call()));
+      setGen0Limit(await contract.methods.CREATION_LIMIT_GEN0().call());
     }
+    setLoading(false);
   }, []);
 
   const loadWeb3 = useCallback(() => _loadWeb3(), [_loadWeb3]);
@@ -138,12 +147,16 @@ export const MetaMaskContextProvider = ({ children }) => {
   return (
     <MetaMaskContext.Provider
       value={{
+        loading,
         wallet,
         hasProvider,
         error: !!toastMessages,
         toastMessages,
         isConnecting,
         contract,
+        owner,
+        isOwner,
+        gen0Limit,
         connectMetaMask,
         clearToastMessage,
         loadWeb3,
