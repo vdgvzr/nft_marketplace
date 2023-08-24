@@ -28,15 +28,15 @@ contract NftContract is ERC721, Ownable {
     Bot[] bots;
 
     uint256 public constant CREATION_LIMIT_GEN0 = 10;
-    uint256 gen0Counter;
+    uint256 public GEN0_COUNTER;
 
     function totalSupply() public view returns (uint) {
         return bots.length;
     }
 
     function _createBotGen0(uint256 _genes) public onlyOwner() returns (uint256) {
-        require(gen0Counter < CREATION_LIMIT_GEN0);
-        gen0Counter++;
+        require(GEN0_COUNTER < CREATION_LIMIT_GEN0);
+        GEN0_COUNTER++;
         return _createBot(0, 0, 0, _genes, msg.sender);
     }
 

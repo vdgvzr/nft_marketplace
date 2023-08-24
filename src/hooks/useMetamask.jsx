@@ -21,7 +21,8 @@ export const MetaMaskContextProvider = ({ children }) => {
   const [contract, setContract] = useState(false);
   const [owner, setOwner] = useState("0x0");
   const [isOwner, setIsOwner] = useState(false);
-  const [gen0Limit, setGen0Limit] = useState(false);
+  const [gen0Limit, setGen0Limit] = useState(10);
+  const [gen0Counter, setGen0Counter] = useState(0);
   const [toastMessages, setToastMessages] = useState([]);
   const [wallet, setWallet] = useState(disconnectedState);
 
@@ -47,6 +48,7 @@ export const MetaMaskContextProvider = ({ children }) => {
       setOwner(await contract.methods.owner().call());
       setIsOwner(accounts[0] === (await contract.methods.owner().call()));
       setGen0Limit(await contract.methods.CREATION_LIMIT_GEN0().call());
+      setGen0Counter(await contract.methods.GEN0_COUNTER().call());
     }
     setLoading(false);
   }, []);
@@ -157,7 +159,9 @@ export const MetaMaskContextProvider = ({ children }) => {
         owner,
         isOwner,
         gen0Limit,
+        gen0Counter,
         connectMetaMask,
+        setToastMessages,
         clearToastMessage,
         loadWeb3,
       }}

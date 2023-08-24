@@ -2,10 +2,46 @@ import Btn from "../components/Button/Button";
 import { useMetaMask } from "../hooks/useMetamask";
 
 export default function Admin() {
-  const { contract, isOwner, gen0Limit } = useMetaMask();
+  const {
+    wallet,
+    contract,
+    isOwner,
+    gen0Limit,
+    gen0Counter,
+    loadWeb3,
+    setToastMessages,
+  } = useMetaMask();
+
+  const remainingGen0 = gen0Limit - gen0Counter;
 
   function createBotGen0(dnaString) {
-    console.log(dnaString);
+    contract.methods
+      ._createBotGen0(dnaString)
+      .send({ from: wallet.accounts[0] })
+      .once("receipt", () => {
+        loadWeb3();
+      })
+      .catch((e) => {
+        setToastMessages((prev) => [
+          ...prev,
+          {
+            id: crypto.randomUUID(),
+            type: "error",
+            message: e.message,
+          },
+        ]);
+      });
+
+    contract.events.Birth().on("data", function (e) {
+      setToastMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          type: "success",
+          message: `Successfully minted CryptoBot #${e.returnValues.botId}!`,
+        },
+      ]);
+    });
   }
 
   function generateDna() {
@@ -23,19 +59,20 @@ export default function Admin() {
     <>
       {isOwner && (
         <>
-          <div className="row">
+          <div className="row my-5">
             <div className="col-12">{contract._address}</div>
           </div>
-          <div className="row">
-            <div className="col-12">{gen0Limit} remaining</div>
+          <div className="row my-5">
+            <div className="col-12">{remainingGen0} left to mint</div>
           </div>
-          <div className="row">
+          <div className="row my-5">
             <div className="col-2">
               <Btn
                 buttonText="Create Gen 0 Bot"
                 onClick={() => {
                   createBotGen0(generateDna());
                 }}
+                disabled={remainingGen0 === 0}
               />
             </div>
           </div>

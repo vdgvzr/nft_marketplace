@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-export default function Btn({ buttonText, onClick, classes, href }) {
+export default function Btn({ buttonText, onClick, classes, href, disabled }) {
   const buttonRef = useRef();
 
   function handleMouseDown() {
@@ -43,7 +43,12 @@ export default function Btn({ buttonText, onClick, classes, href }) {
 
   return (
     <>
-      <div className={`wrapper ${classes}`} onClick={onClick}>
+      <div
+        className={`wrapper ${classes ? classes : ""} ${
+          disabled ? "custom-btn-disabled" : ""
+        }`}
+        onClick={!disabled ? onClick : undefined}
+      >
         <a
           className="custom-btn"
           ref={buttonRef}
