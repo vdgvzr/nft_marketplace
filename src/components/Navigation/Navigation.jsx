@@ -59,7 +59,7 @@ export default function Navigation() {
               {hasProvider && wallet.accounts.length > 0 && (
                 <Btn
                   buttonText={formatAddress(wallet.accounts[0])}
-                  href={`https://etherscan.io/address/${wallet}`}
+                  href={`https://etherscan.io/address/${wallet.accounts[0]}`}
                   classes="ms-3"
                 />
               )}
