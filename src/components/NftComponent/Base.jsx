@@ -1,14 +1,14 @@
 import expressions from "./Expressions";
 import antennae from "./Antennae";
 
-export default function Base({ dna }) {
-  const expression = expressions(dna);
-  const antenna = antennae(dna);
+export default function Base({ parts }) {
+  const expression = expressions(parts);
+  const antenna = antennae(parts);
 
   const image = `<svg
     width="300.5px"
     height="557.236459px"
-    viewBox="0 0 ${300 + dna.size * 10} 550"
+    viewBox="0 0 ${300 + parts.size * 10} 550"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
   >
@@ -388,7 +388,7 @@ export default function Base({ dna }) {
           <g id="Rectangle">
             <use
               fill-opacity="0.506427045"
-              fill="#${dna.batteryColor}"
+              fill="#${parts.batteryColor}"
               fill-rule="evenodd"
               href="#path-4"
             ></use>
@@ -430,7 +430,7 @@ export default function Base({ dna }) {
             href="#path-6"
           ></use>
           <use
-            fill="#${dna.skinColor}"
+            fill="#${parts.skinColor}"
             fill-rule="evenodd"
             href="#path-6"
           ></use>
@@ -445,7 +445,7 @@ export default function Base({ dna }) {
         <g id="head" transform="translate(70, 44)">
           <g id="headShape">
             <use
-              fill="#${dna.skinColor}"
+              fill="#${parts.skinColor}"
               fill-rule="evenodd"
               href="#path-9"
             ></use>
@@ -476,7 +476,7 @@ export default function Base({ dna }) {
                 href="#path-11"
               ></use>
               <path
-                stroke="#${dna.highlightColor}"
+                stroke="#${parts.highlightColor}"
                 stroke-width="3"
                 d="M97.3786878,1.5 C124.828506,1.5 143.525277,4.47716844 155.022874,18.4017858 C165.609354,31.2229584 170.064439,53.1451537 170.064439,89.8455718 C170.064439,131.138719 164.341893,168.277513 150.855764,193.937789 C144.861941,205.342333 137.335099,214.463689 128.067494,220.612972 C119.402723,226.362261 109.219739,229.5 97.3786878,229.5 C70.9423006,229.5 47.0623414,213.890936 29.7562505,188.805043 C12.2845597,163.479106 1.5,128.486719 1.5,89.8455718 C1.5,55.6435558 9.93224906,34.304652 24.1070433,21.2264054 C41.7246644,4.97166554 68.04868,1.5 97.3786878,1.5 Z"
                 stroke-linejoin="square"
@@ -489,14 +489,14 @@ export default function Base({ dna }) {
           <path
             d="M109,27.3840441 C116.731986,27.3840441 123.731986,30.5180509 128.79899,35.5850543 C133.865993,40.6520577 137,47.6520577 137,55.3840441 L137,87.3840441 C137,100.638878 131.627417,112.638878 122.941125,121.32517 C114.254834,130.011461 102.254834,135.384044 89,135.384044 L29,135.384044 C21.2680135,135.384044 14.2680135,132.250037 9.20101013,127.183034 C4.13400675,122.116031 1,115.116031 1,107.384044 L1,55.3840441 C1,47.6520577 4.13400675,40.6520577 9.20101013,35.5850543 C14.2680135,30.5180509 21.2680135,27.3840441 29,27.3840441 Z"
             id="Rectangle"
-            stroke="#${dna.highlightColor}"
+            stroke="#${parts.highlightColor}"
             stroke-width="2"
-            fill="#${dna.expressionColor}"
+            fill="#${parts.expressionColor}"
           ></path>
           <path
             d="M74.5,47.8840441 C76.0658162,60.7176759 76.8487244,71.7176759 76.8487244,80.8840441 C76.8487244,90.0504124 76.0658162,101.050412 74.5,113.884044"
             id="line-copy"
-            fill="#${dna.skinColor}"
+            fill="#${parts.skinColor}"
           ></path>
         </g>
         ${antenna === undefined ? "" : antenna.left}
@@ -506,5 +506,12 @@ export default function Base({ dna }) {
 
   const src = `data:image/svg+xml;utf8,${encodeURIComponent(image)}`;
 
-  return <img src={src} alt={`bot-` + dna.expression + dna.skinColor} />;
+  return (
+    <img
+    className="p-4"
+      style={{ width: "100%", background: `#${parts.backgroundColor}` }}
+      src={src}
+      alt={`bot-` + parts.expression + parts.skinColor}
+    />
+  );
 }

@@ -19,7 +19,7 @@ export default function Navigation() {
   return (
     <>
       <Navbar expand="lg" className="">
-        <Container fluid>
+        <Container>
           <Link className="navbar-brand" to="/">
             <span className="navbar-brand__logo me-3">
               <NFT />
@@ -31,11 +31,13 @@ export default function Navigation() {
             <Nav className="ms-auto">
               {PAGES.map((page, index) => {
                 if (page.name !== "Admin" || isOwner) {
-                  return (
-                    <Link className="nav-link" key={index} to={page.url}>
-                      {page.name}
-                    </Link>
-                  );
+                  if (page.name !== "Catalogue") {
+                    return (
+                      <Link className="nav-link" key={index} to={page.url}>
+                        {page.name}
+                      </Link>
+                    );
+                  }
                 }
               })}
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">

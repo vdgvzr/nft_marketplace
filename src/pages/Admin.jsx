@@ -1,5 +1,7 @@
+import { Col, Row } from "react-bootstrap";
 import Btn from "../components/Button/Button";
 import { useMetaMask } from "../hooks/useMetamask";
+import NFT from "../components/NftComponent/NFT";
 
 export default function Admin() {
   const {
@@ -10,13 +12,14 @@ export default function Admin() {
     gen0Counter,
     loadWeb3,
     setToastMessages,
+    catalogue,
   } = useMetaMask();
 
   const remainingGen0 = gen0Limit - gen0Counter;
 
   function createBotGen0(dnaString) {
-    contract.methods
-      ._createBotGen0(dnaString)
+    contract?.methods
+      .createBotGen0(dnaString)
       .send({ from: wallet.accounts[0] })
       .once("receipt", () => {
         loadWeb3();
@@ -59,14 +62,11 @@ export default function Admin() {
     <>
       {isOwner && (
         <>
-          <div className="row my-5">
-            <div className="col-12">{contract._address}</div>
-          </div>
-          <div className="row my-5">
-            <div className="col-12">{remainingGen0} left to mint</div>
-          </div>
-          <div className="row my-5">
-            <div className="col-2">
+          <Row className="my-5">
+            <Col xs={12}>{remainingGen0} left to mint</Col>
+          </Row>
+          <Row className="my-5">
+            <Col lg={2}>
               <Btn
                 buttonText="Create Gen 0 Bot"
                 onClick={() => {
@@ -74,8 +74,20 @@ export default function Admin() {
                 }}
                 disabled={remainingGen0 === 0}
               />
-            </div>
-          </div>
+            </Col>
+          </Row>
+          <Row>
+            {catalogue.map((bot, index) => {
+              const gen = bot.generation.toString();
+              if (gen === "0") {
+                return (
+                  <Col lg={3} key={index}>
+                    <NFT type="card" gen={gen} parts={bot.parts.toString()} />
+                  </Col>
+                );
+              }
+            })}
+          </Row>
         </>
       )}
     </>

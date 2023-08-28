@@ -13,12 +13,15 @@ contract NftContract is ERC721, Ownable {
     using SafeMath for uint32;
     using SafeMath for uint16;
 
-    constructor() ERC721("NftBots", "NB") {}
+    constructor() ERC721("NftBots", "NB") {
+        // OG
+        createBotGen0(88883388006880);
+    }
 
-    event Birth(address owner, uint256 botId, uint256 materId, uint256 paterId, uint256 genes);
+    event Birth(address owner, uint256 botId, uint256 materId, uint256 paterId, uint256 parts);
 
     struct Bot {
-        uint256 genes;
+        uint256 parts;
         uint64 creationTime;
         uint32 materId;
         uint32 paterId;
@@ -34,21 +37,21 @@ contract NftContract is ERC721, Ownable {
         return bots.length;
     }
 
-    function _createBotGen0(uint256 _genes) public onlyOwner() returns (uint256) {
+    function createBotGen0(uint256 _parts) public onlyOwner() {
         require(GEN0_COUNTER < CREATION_LIMIT_GEN0);
         GEN0_COUNTER++;
-        return _createBot(0, 0, 0, _genes, msg.sender);
+        _createBot(0, 0, 0, _parts, _msgSender());
     }
 
     function _createBot(
         uint256 _materId,
         uint256 _paterId,
         uint256 _generation,
-        uint256 _genes,
+        uint256 _parts,
         address _owner
-    ) private returns (uint256) {
+    ) internal returns (uint) {
         Bot memory _bot = Bot({
-            genes: _genes,
+            parts: _parts,
             creationTime: uint64(block.timestamp),
             materId: uint32(_materId),
             paterId: uint32(_paterId),
@@ -58,15 +61,17 @@ contract NftContract is ERC721, Ownable {
         bots.push(_bot);
         uint256 newBotId = bots.length - 1;
 
-        emit Birth(_owner, newBotId, _materId, _paterId, _genes);
+        require(newBotId == uint256(uint32(newBotId)));
+
+        emit Birth(_owner, newBotId, _materId, _paterId, _parts);
 
         _safeMint(_owner, newBotId);
 
         return newBotId;
     }
 
-    function getBot(uint256 tokenId) external view returns (
-        uint256 genes,
+    function getBot(uint256 tokenId) public view returns (
+        uint256 parts,
         uint256 creationTime,
         uint256 materId,
         uint256 paterId,
@@ -75,11 +80,35 @@ contract NftContract is ERC721, Ownable {
     ) {
         Bot storage bot = bots[tokenId];
 
-        genes = uint256(bot.genes);
+        parts = uint256(bot.parts);
         creationTime = uint256(bot.creationTime);
         materId = uint256(bot.materId);
         paterId = uint256(bot.paterId);
         generation = uint256(bot.generation);
         owner = address(ownerOf(tokenId));
+    }
+
+    function _synthesize(uint256 _paterId, uint256 _materId) public {
+        require(ownerOf(_paterId) == _msgSender(), "The user doesn't own the token");
+        require(ownerOf(_materId) == _msgSender(), "The user doesn't own the token");
+
+        ( uint256 paterParts,,,,, ) = getBot(_paterId);
+        ( uint256 _materParts,,,,uint256 materGeneration, ) = getBot(_materId);
+
+        uint256 newParts = _mixParts(paterParts, _materParts);
+
+        uint256 newGen = materGeneration + 1;
+
+        _createBot(_materId, _paterId, newGen, newParts, _msgSender());
+    }
+
+    function _mixParts(uint256 _paterParts, uint256 _materParts) internal pure returns (uint256) {
+        uint256 paterHalf = _paterParts / 10000000;
+        uint256 materHalf = _materParts % 10000000;
+
+        uint256 newParts = paterHalf * 10000000;
+        newParts = newParts + materHalf;
+
+        return newParts;
     }
 }

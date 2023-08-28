@@ -23,8 +23,12 @@ export const MetaMaskContextProvider = ({ children }) => {
   const [isOwner, setIsOwner] = useState(false);
   const [gen0Limit, setGen0Limit] = useState(10);
   const [gen0Counter, setGen0Counter] = useState(0);
+  const [totalSupply, setTotalSupply] = useState(0);
+  const [catalogue, setCatalogue] = useState([]);
   const [toastMessages, setToastMessages] = useState([]);
   const [wallet, setWallet] = useState(disconnectedState);
+
+  const provider = window.ethereum;
 
   function clearToastMessage(id) {
     setToastMessages(toastMessages.filter((message) => message.id !== id));
@@ -32,53 +36,77 @@ export const MetaMaskContextProvider = ({ children }) => {
 
   const _loadWeb3 = useCallback(async () => {
     setLoading(true);
-    window.web3 = new Web3(window.ethereum);
-    const accounts = await window.web3.eth.getAccounts();
-    const networkId = await window.web3.eth.net.getId();
+
+    const web3 = new Web3(provider);
+    const accounts = await provider.request({ method: "eth_accounts" });
+    const networkId = await provider.networkVersion;
     const nftNetworkData = NftContract.networks[networkId];
 
     if (nftNetworkData) {
-      const contract = new window.web3.eth.Contract(
+      // Set global state vars
+      const contract = new web3.eth.Contract(
         NftContract.abi,
         nftNetworkData.address
       );
+      const getOwner = await contract.methods.owner().call();
+      const getIsOwner =
+        web3.utils.toChecksumAddress(accounts[0]) ===
+        (await contract.methods.owner().call());
+      const getGen0Limit = web3.utils.toNumber(
+        await contract.methods.CREATION_LIMIT_GEN0().call()
+      );
+      const getGen0Counter = web3.utils.toNumber(
+        await contract.methods.GEN0_COUNTER().call()
+      );
+      const getTotalSupply = web3.utils.toNumber(
+        await contract.methods.totalSupply().call()
+      );
+      const getCatalogue = [];
+      for (let i = 0; i < getTotalSupply; i++) {
+        const bot = await contract.methods.getBot(i).call();
+        getCatalogue.push(bot);
+      }
 
-      // Set global state vars
       setContract(contract);
-      setOwner(await contract.methods.owner().call());
-      setIsOwner(accounts[0] === (await contract.methods.owner().call()));
-      setGen0Limit(await contract.methods.CREATION_LIMIT_GEN0().call());
-      setGen0Counter(await contract.methods.GEN0_COUNTER().call());
+      setOwner(getOwner);
+      setIsOwner(getIsOwner);
+      setGen0Limit(getGen0Limit);
+      setGen0Counter(getGen0Counter);
+      setTotalSupply(getTotalSupply);
+      setCatalogue(getCatalogue);
     }
     setLoading(false);
-  }, []);
+  }, [provider]);
 
   const loadWeb3 = useCallback(() => _loadWeb3(), [_loadWeb3]);
 
   // useCallback ensures that you don't uselessly recreate the _updateWallet function on every render
-  const _updateWallet = useCallback(async (providedAccounts) => {
-    const accounts =
-      providedAccounts ||
-      (await window.ethereum.request({ method: "eth_accounts" }));
+  const _updateWallet = useCallback(
+    async (providedAccounts) => {
+      const accounts =
+        providedAccounts ||
+        (await provider.request({ method: "eth_accounts" }));
 
-    if (accounts.length === 0) {
-      // If there are no accounts, then the user is disconnected
-      setWallet(disconnectedState);
-      return;
-    }
+      if (accounts.length === 0) {
+        // If there are no accounts, then the user is disconnected
+        setWallet(disconnectedState);
+        return;
+      }
 
-    const balance = formatBalance(
-      await window.ethereum.request({
-        method: "eth_getBalance",
-        params: [accounts[0], "latest"],
-      })
-    );
-    const chainId = await window.ethereum.request({
-      method: "eth_chainId",
-    });
+      const balance = formatBalance(
+        await provider.request({
+          method: "eth_getBalance",
+          params: [accounts[0], "latest"],
+        })
+      );
+      const chainId = await provider.request({
+        method: "eth_chainId",
+      });
 
-    setWallet({ accounts, balance, chainId });
-  }, []);
+      setWallet({ accounts, balance, chainId });
+    },
+    [provider]
+  );
 
   const updateWalletAndAccounts = useCallback(
     () => _updateWallet(),
@@ -103,28 +131,28 @@ export const MetaMaskContextProvider = ({ children }) => {
       if (provider) {
         updateWalletAndAccounts();
         loadWeb3();
-        window.ethereum.on("accountsChanged", updateWallet);
-        window.ethereum.on("accountsChanged", loadWeb3);
-        window.ethereum.on("chainChanged", updateWalletAndAccounts);
-        window.ethereum.on("chainChanged", loadWeb3);
+        provider.on("accountsChanged", updateWallet);
+        provider.on("accountsChanged", loadWeb3);
+        provider.on("chainChanged", updateWalletAndAccounts);
+        provider.on("chainChanged", loadWeb3);
       }
     };
 
     getProvider();
 
     return () => {
-      window.ethereum?.removeListener("accountsChanged", updateWallet);
-      window.ethereum?.removeListener("accountsChanged", loadWeb3);
-      window.ethereum?.removeListener("chainChanged", updateWalletAndAccounts);
-      window.ethereum?.removeListener("chainChanged", loadWeb3);
+      provider?.removeListener("accountsChanged", updateWallet);
+      provider?.removeListener("accountsChanged", loadWeb3);
+      provider?.removeListener("chainChanged", updateWalletAndAccounts);
+      provider?.removeListener("chainChanged", loadWeb3);
     };
-  }, [updateWallet, updateWalletAndAccounts, loadWeb3]);
+  }, [updateWallet, updateWalletAndAccounts, loadWeb3, provider]);
 
   const connectMetaMask = async () => {
     setIsConnecting(true);
 
     try {
-      const accounts = await window.ethereum.request({
+      const accounts = await provider.request({
         method: "eth_requestAccounts",
       });
       clearToastMessage();
@@ -160,6 +188,8 @@ export const MetaMaskContextProvider = ({ children }) => {
         isOwner,
         gen0Limit,
         gen0Counter,
+        totalSupply,
+        catalogue,
         connectMetaMask,
         setToastMessages,
         clearToastMessage,

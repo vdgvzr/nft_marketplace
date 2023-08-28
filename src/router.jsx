@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
+import Catalogue from "./pages/Catalogue";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
           {
             path: "admin",
             element: <Admin />,
+          },
+          {
+            path: "catalogue",
+            element: <Catalogue />,
           },
           {
             path: "*",
@@ -42,3 +47,5 @@ router.routes[0].children[0].children.map((page) => {
     PAGES.push({ name: newPath.join(" "), url: "/" + page.path });
   }
 });
+
+console.log(PAGES);
