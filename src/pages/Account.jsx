@@ -1,9 +1,9 @@
 import BotCatalogue from "../components/BotCatalogue/BotCatalogue";
 
-export default function Catalogue() {
+export default function Account() {
   return (
     <>
-      <BotCatalogue type="catalogue" />
+      <BotCatalogue type="account" />
     </>
   );
 }

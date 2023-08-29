@@ -16,6 +16,7 @@ contract NftContract is ERC721, Ownable {
     constructor() ERC721("NftBots", "NB") {
         // OG
         createBotGen0(88883388006880);
+        createBotGen0(11223344556677);
     }
 
     event Birth(address owner, uint256 botId, uint256 materId, uint256 paterId, uint256 parts);
@@ -40,7 +41,7 @@ contract NftContract is ERC721, Ownable {
     function createBotGen0(uint256 _parts) public onlyOwner() {
         require(GEN0_COUNTER < CREATION_LIMIT_GEN0);
         GEN0_COUNTER++;
-        _createBot(0, 0, 0, _parts, _msgSender());
+        _createBot(0, 0, 0, _parts, msg.sender);
     }
 
     function _createBot(

@@ -30,17 +30,19 @@ export default function Navigation() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               {PAGES.map((page, index) => {
-                if (page.name !== "Admin" || isOwner) {
-                  if (page.name !== "Catalogue") {
-                    return (
-                      <Link className="nav-link" key={index} to={page.url}>
-                        {page.name}
-                      </Link>
-                    );
-                  }
+                const loggedInAsOwner = page.name !== "Admin" || isOwner;
+                const loggedIn =
+                  page.name !== "Account" || wallet.accounts.length > 0;
+
+                if (loggedInAsOwner || loggedIn) {
+                  return (
+                    <Link className="nav-link" key={index} to={page.url}>
+                      {page.name}
+                    </Link>
+                  );
                 }
               })}
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+              {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">
                   Another action
@@ -52,7 +54,7 @@ export default function Navigation() {
                 <NavDropdown.Item href="#action/3.4">
                   Separated link
                 </NavDropdown.Item>
-              </NavDropdown>
+              </NavDropdown> */}
               {!hasProvider && (
                 <Btn
                   buttonText="Install MetaMask"

@@ -49,9 +49,12 @@ export const MetaMaskContextProvider = ({ children }) => {
         nftNetworkData.address
       );
       const getOwner = await contract.methods.owner().call();
-      const getIsOwner =
-        web3.utils.toChecksumAddress(accounts[0]) ===
-        (await contract.methods.owner().call());
+      let getIsOwner = false;
+      if (accounts[0] != undefined) {
+        getIsOwner =
+          web3.utils.toChecksumAddress(accounts[0]) ===
+          (await contract.methods.owner().call());
+      }
       const getGen0Limit = web3.utils.toNumber(
         await contract.methods.CREATION_LIMIT_GEN0().call()
       );

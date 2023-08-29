@@ -3,6 +3,7 @@ import App from "./App";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Catalogue from "./pages/Catalogue";
+import Account from "./pages/Account";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
           {
             path: "catalogue",
             element: <Catalogue />,
+          },
+          {
+            path: "account",
+            element: <Account />,
           },
           {
             path: "*",
@@ -47,5 +52,3 @@ router.routes[0].children[0].children.map((page) => {
     PAGES.push({ name: newPath.join(" "), url: "/" + page.path });
   }
 });
-
-console.log(PAGES);

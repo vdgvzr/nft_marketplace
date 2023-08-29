@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import Btn from "../components/Button/Button";
 import { useMetaMask } from "../hooks/useMetamask";
-import NFT from "../components/NftComponent/NFT";
+import BotCatalogue from "../components/BotCatalogue/BotCatalogue";
 
 export default function Admin() {
   const {
@@ -12,13 +12,12 @@ export default function Admin() {
     gen0Counter,
     loadWeb3,
     setToastMessages,
-    catalogue,
   } = useMetaMask();
 
   const remainingGen0 = gen0Limit - gen0Counter;
 
   function createBotGen0(dnaString) {
-    contract?.methods
+    contract.methods
       .createBotGen0(dnaString)
       .send({ from: wallet.accounts[0] })
       .once("receipt", () => {
@@ -76,18 +75,7 @@ export default function Admin() {
               />
             </Col>
           </Row>
-          <Row>
-            {catalogue.map((bot, index) => {
-              const gen = bot.generation.toString();
-              if (gen === "0") {
-                return (
-                  <Col lg={3} key={index}>
-                    <NFT type="card" gen={gen} parts={bot.parts.toString()} />
-                  </Col>
-                );
-              }
-            })}
-          </Row>
+          <BotCatalogue type="admin" />
         </>
       )}
     </>
